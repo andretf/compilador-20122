@@ -8,16 +8,14 @@
 	Gustavo Schimid de Jesus
 */
 
-#include "tokens.h"
-#include <stdlib.h>
-#include <string.h>
 #include "hash.h"
 
 int INT;
 double FLOAT;
 char CHAR;
-int lineNumber = 0;
-int running = 1;
+
+extern int running, lineNumber;
+extern htable_t *symbols;
 
 int getLineNumber(void);
 void initMe(void);
