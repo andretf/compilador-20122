@@ -8,10 +8,10 @@
 	Gustavo Schimid de Jesus
 */
 
+#include "tokens.h"
 #include <stdlib.h>
 #include <string.h>
 #include "hash.h"
-#include "tokens.h"
 
 int INT;
 double FLOAT;
@@ -27,8 +27,8 @@ digit     			[0-9]
 alphabet			[a-zA-Z_]
 alphanum			[A-Za-z0-9]
 
-%x					COMMENT_N_LINES
-%x					COMMENT_LINE
+%x				COMMENT_N_LINES
+%x				COMMENT_LINE
 
 %%
 
@@ -44,6 +44,8 @@ do				{return KW_DO;}
 input				{return KW_INPUT;}
 output				{return KW_OUTPUT;}
 return				{return KW_RETURN;}
+true				{return LIT_TRUE;}
+false				{return LIT_FALSE;}
 
 "<="				{return OPERATOR_LE;}
 ">="				{return OPERATOR_GE;}
@@ -52,75 +54,75 @@ return				{return KW_RETURN;}
 "&&"				{return OPERATOR_AND;}
 "||"				{return OPERATOR_OR;}
 
-"-"					{return (int)yytext[0];}
-","					{return (int)yytext[0];}
-":"					{return (int)yytext[0];}
-"("					{return (int)yytext[0];}
-")"					{return (int)yytext[0];}
-"["					{return (int)yytext[0];}
-"]"					{return (int)yytext[0];}
-"{"					{return (int)yytext[0];}
-"}"					{return (int)yytext[0];}
-"+"					{return (int)yytext[0];}
-"*"					{return (int)yytext[0];}
-\\					{return (int)yytext[0];}
-"/"					{return (int)yytext[0];}
-"<"					{return (int)yytext[0];}
-">"					{return (int)yytext[0];}
-"="					{return (int)yytext[0];}
-"!"					{return (int)yytext[0];}
-"&"					{return (int)yytext[0];}
-"$"					{return (int)yytext[0];}
-";"					{return (int)yytext[0];}
+"-"				{return yytext[0];}
+","				{return yytext[0];}
+":"				{return yytext[0];}
+"("				{return yytext[0];}
+")"				{return yytext[0];}
+"["				{return yytext[0];}
+"]"				{return yytext[0];}
+"{"				{return yytext[0];}
+"}"				{return yytext[0];}
+"+"				{return yytext[0];}
+"*"				{return yytext[0];}
+\\				{return yytext[0];}
+"/"				{return yytext[0];}
+"<"				{return yytext[0];}
+">"				{return yytext[0];}
+"="				{return yytext[0];}
+"!"				{return yytext[0];}
+"&"				{return yytext[0];}
+"$"				{return yytext[0];}
+";"				{return yytext[0];}
 
 
 
-{alphabet}({alphabet}|{digit})* 		{
-										char *tmp = (char *) malloc(sizeof(char)*strlen(yytext) + 1);
-										sprintf(tmp, "%s", yytext);
-										InsertSymbol(TK_IDENTIFIER, yytext);
-										return (TK_IDENTIFIER);
-										}
+{alphabet}({alphabet}|{digit})* 	{
+					char *tmp = (char *) malloc(sizeof(char)*strlen(yytext) + 1);
+					sprintf(tmp, "%s", yytext);
+					InsertSymbol(TK_IDENTIFIER, yytext);
+					return (TK_IDENTIFIER);
+					}
 
-\'(\\.|[^\\"])\' 						{
-										CHAR = yytext[1];
-										InsertSymbol(CHAR, yytext);
-										return (CHAR);
-										}
+\'(\\.|[^\\"])\' 			{
+					CHAR = yytext[1];
+					InsertSymbol(CHAR, yytext);
+					return (CHAR);
+					}
 
-\"(\\.|[^\\"])*\"						{
-										char *tmp = (char *)malloc(sizeof(char)*strlen(yytext) + 1);
-										sprintf(tmp, "%s", yytext);
-										InsertSymbol(LIT_STRING, yytext);
-										return(LIT_STRING);
-										}
+\"(\\.|[^\\"])*\"			{
+					char *tmp = (char *)malloc(sizeof(char)*strlen(yytext) + 1);
+					sprintf(tmp, "%s", yytext);
+					InsertSymbol(LIT_STRING, yytext);
+					return(LIT_STRING);
+					}
 
-{digit}+ 								{
-										INT = atoi(yytext);
-										InsertSymbol(LIT_INTEGER, yytext);
-										return (LIT_INTEGER);
-										}
+{digit}+ 				{
+					INT = atoi(yytext);
+					InsertSymbol(LIT_INTEGER, yytext);
+					return (LIT_INTEGER);
+					}
 
 {digit}*\.{digit}+([eE][+-]{digit}+)?	{
-										FLOAT = atof(yytext);
-										InsertSymbol(LIT_FLOA, yytext);
-										return (LIT_FLOA);
-										}
+					FLOAT = atof(yytext);
+					InsertSymbol(LIT_FLOA, yytext);
+					return (LIT_FLOA);
+					}
 
-"/*"									BEGIN(COMMENT_N_LINES);
-<COMMENT_N_LINES>[^*\n]*			{ }
+"/*"					BEGIN(COMMENT_N_LINES);
+<COMMENT_N_LINES>[^*\n]*		{ }
 <COMMENT_N_LINES>"*"+[^/\n]*		{ }
-<COMMENT_N_LINES>\n				{ ++lineNumber; }
+<COMMENT_N_LINES>\n			{ ++lineNumber; }
 <COMMENT_N_LINES>"*/"			{ BEGIN(INITIAL); }
 
-"//"									BEGIN(COMMENT_LINE);
-<COMMENT_LINE>[^\n]*				{ }
-<COMMENT_LINE>\n					{ ++lineNumber; BEGIN(INITIAL); }
+"//"					BEGIN(COMMENT_LINE);
+<COMMENT_LINE>[^\n]*			{ }
+<COMMENT_LINE>\n			{ ++lineNumber; BEGIN(INITIAL); }
 
 					
 [ \t]		
-\n										{ lineNumber++; }
-. 										{ printf("Erro léxico: identificador %c não reconhecido.\n", yytext[0]); return -1; }
+\n					{ lineNumber++; }
+. 					{ printf("Erro léxico: identificador %c não reconhecido.\n", yytext[0]); return -1; }
 
 %%
 
