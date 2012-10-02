@@ -31,10 +31,19 @@
 #define LIT_INTEGER   281
 #define LIT_FLOA      282
 #define LIT_FALSE     283
-#define LIT_TRUE	  284
+#define LIT_TRUE      284
 #define LIT_CHAR      285
 #define LIT_STRING    286
 
 #define TOKEN_ERROR   290
+
+#define SYMBOL_UNDEFINED 0
+#define SYMBOL_LIT_INTEGER 1
+#define SYMBOL_LIT_FLOATING 2
+#define SYMBOL_LIT_TRUE 3
+#define SYMBOL_LIT_FALSE 4
+#define SYMBOL_LIT_CHAR 5
+#define SYMBOL_LIT_STRING 6
+#define SYMBOL_IDENTIFIER 7
 
 /* END OF FILE */
