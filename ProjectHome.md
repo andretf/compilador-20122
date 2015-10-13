@@ -1,0 +1,1 @@
+This project is an inplementation of a compiler for a language used only for learning proposites;
